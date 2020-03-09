@@ -4,6 +4,6 @@ public interface ViewModel {
     ApiHandler apiHandler = null;
     MainView view = null;
     void verifyButtonPressed(String url);
-    void feedBackButtonPressed();
+    void feedBackButtonPressed(String url);
     void feedbackAlertButtonpressed(Boolean chance);
 }

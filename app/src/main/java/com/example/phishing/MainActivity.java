@@ -3,10 +3,15 @@ package com.example.phishing;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 
 import com.example.phishing.Assemblers.ViewModelAssembler;
@@ -20,6 +25,10 @@ public class MainActivity extends AppCompatActivity implements MainView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         viewModel = ViewModelAssembler.createInstance(this);
+        if (getIntent().getData() != null) {
+            String url = getIntent().getData().toString();
+            viewModel.verifyButtonPressed(url);
+        }
     }
 
     public void verifyButtonClicked(View view) {
@@ -27,11 +36,11 @@ public class MainActivity extends AppCompatActivity implements MainView {
     }
 
     public void feedbackButtonClicked(View view) {
-        viewModel.feedBackButtonPressed();
+        viewModel.feedBackButtonPressed(getUrl());
     }
 
     @Override
-    public void showVerifyResult(String message) {
+    public void showVerifyResult(String message, final String url) {
         AlertDialog.Builder builder
                 = new AlertDialog
                 .Builder(MainActivity.this);
@@ -49,7 +58,16 @@ public class MainActivity extends AppCompatActivity implements MainView {
                                 public void onClick(DialogInterface dialog,
                                                     int which)
                                 {
-                                    finish();
+                                    Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse(url));
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    intent.setPackage("com.android.chrome");
+                                    try {
+                                        startActivity(intent);
+                                    } catch (ActivityNotFoundException ex) {
+                                        // Chrome browser presumably not installed and open Kindle Browser
+                                        intent.setPackage("com.amazon.cloud9");
+                                        startActivity(intent);
+                                    }
                                 }
                             });
 
@@ -63,7 +81,16 @@ public class MainActivity extends AppCompatActivity implements MainView {
                                 public void onClick(DialogInterface dialog,
                                                     int which)
                                 {
-                                    finish();
+                                    Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse(url));
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    intent.setPackage("com.android.chrome");
+                                    try {
+                                        startActivity(intent);
+                                    } catch (ActivityNotFoundException ex) {
+                                        // Chrome browser presumably not installed and open Kindle Browser
+                                        intent.setPackage("com.amazon.cloud9");
+                                        startActivity(intent);
+                                    }
                                 }
                             });
 
@@ -123,5 +150,29 @@ public class MainActivity extends AppCompatActivity implements MainView {
     public String getUrl() {
         EditText url = findViewById(R.id.url);
         return  url.getText().toString().trim();
+    }
+
+    @Override
+    public void makeInvalidUrlAlert() {
+        AlertDialog.Builder builder
+                = new AlertDialog
+                .Builder(MainActivity.this);
+
+        builder.setMessage("Enter vaild URL");
+        builder.setTitle("Warning!");
+        builder.setPositiveButton(
+                "ok",
+                new DialogInterface
+                        .OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog,
+                                        int which)
+                    {
+
+                    }
+                });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }
