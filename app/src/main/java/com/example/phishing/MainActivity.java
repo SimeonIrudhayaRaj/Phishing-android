@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
                                 }
                             });
 
-        } else {
+        } else if (message.equals("unSafe")){
             builder.setPositiveButton(
                             "Proceed",
                             new DialogInterface
@@ -95,6 +95,19 @@ public class MainActivity extends AppCompatActivity implements MainView {
                             });
 
             builder.setNegativeButton("StaySafe",new DialogInterface
+                    .OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog,
+                                    int which)
+                {
+                    finish();
+                }
+            });
+        } else {
+            builder.setMessage("OoPs! SOmEthIng wEnT wrOnG!!");
+
+            builder.setNegativeButton("ok",new DialogInterface
                     .OnClickListener() {
 
                 @Override

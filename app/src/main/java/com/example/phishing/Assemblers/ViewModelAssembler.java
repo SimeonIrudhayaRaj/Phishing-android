@@ -6,6 +6,6 @@ import com.example.phishing.Interfaces.ViewModel;
 
 public class ViewModelAssembler {
     public static ViewModel createInstance(MainView view) {
-        return new ViewModelImpl(ApiHandlerAssemler.createInstance(), view);
+        return new ViewModelImpl(view);
     }
 }

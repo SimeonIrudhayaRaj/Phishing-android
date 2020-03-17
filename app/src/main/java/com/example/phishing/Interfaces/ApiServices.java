@@ -8,6 +8,10 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public interface ApiServices {
-    @GET("/verify")
-    Call<List<ResponseModel>> verify(@Query("url") String url);
+    @GET("check/")
+    Call<ResponseModel> verify(@Query("url") String url);
+
+    @GET("feedback/")
+    Call<String> feedback(@Query("url") String url,
+                          @Query("feedback") int chance);
 }
