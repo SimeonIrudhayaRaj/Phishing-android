@@ -33,12 +33,12 @@ public class ApiHandlerRetroFitImpl implements ApiHandler {
         call.enqueue(new Callback<ResponseModel>() {
             @Override
             public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
-                delegate.processResult(response.body().getStatus(), url);
+                delegate.processCheckResult(response.body().getStatus(), url);
             }
 
             @Override
             public void onFailure(Call<ResponseModel> call, Throwable t) {
-                delegate.processResult(0, url);
+                delegate.processCheckResult(0, url);
 
             }
         });
@@ -57,12 +57,12 @@ public class ApiHandlerRetroFitImpl implements ApiHandler {
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-
+                delegate.processFeedbackResult(true);
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-
+                delegate.processFeedbackResult(false);
             }
         });
     }

@@ -4,16 +4,13 @@ import android.telephony.data.ApnSetting;
 import android.util.Log;
 import android.util.Patterns;
 import android.webkit.URLUtil;
-
 import com.example.phishing.Assemblers.ApiHandlerAssemler;
 import com.example.phishing.Interfaces.ApiDelegate;
 import com.example.phishing.Interfaces.ApiHandler;
 import com.example.phishing.Interfaces.MainView;
 import com.example.phishing.Interfaces.ViewModel;
-
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import retrofit2.http.Url;
 
 public class ViewModelImpl implements ViewModel, ApiDelegate {
@@ -25,6 +22,7 @@ public class ViewModelImpl implements ViewModel, ApiDelegate {
     }
     @Override
     public void verifyButtonPressed(String urlString) {
+        view.showProgressBar();
         if (!isVailUrl(urlString)) {
             this.view.makeInvalidUrlAlert();
             return;
@@ -43,6 +41,7 @@ public class ViewModelImpl implements ViewModel, ApiDelegate {
 
     @Override
     public void feedbackAlertButtonpressed(Boolean chance) {
+        view.showProgressBar();
         if (chance) {
             apiHandler.makeFeedbackCall(view.getUrl(), -1);
         } else {
@@ -55,19 +54,27 @@ public class ViewModelImpl implements ViewModel, ApiDelegate {
     }
 
     @Override
-    public void processResult(int result, String url) {
-        String message;
-        Log.v("aaaaaaaaaaaa", result + url);
+    public void processCheckResult(int result, String url) {
+        view.hideProgressBar();
         switch (result) {
             case -1:
-                message = "unSafe";
+                view.showUnsafeUrlAlert(url);
                 break;
             case 1:
-                message = "safe";
+                view.showSafeUrlAlert(url);
                 break;
             default:
-                message = "error";
+                view.showErrorAlert();
         }
-        view.showVerifyResult(message, url);
+    }
+
+    @Override
+    public void processFeedbackResult(Boolean success) {
+        view.hideProgressBar();
+        if (success ){
+            view.showSucessFeedback();
+        } else {
+            view.showErrorAlert();
+        }
     }
 }

@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import com.example.phishing.Assemblers.ViewModelAssembler;
 import com.example.phishing.Interfaces.MainView;
@@ -40,97 +41,10 @@ public class MainActivity extends AppCompatActivity implements MainView {
     }
 
     @Override
-    public void showVerifyResult(String message, final String url) {
-        AlertDialog.Builder builder
-                = new AlertDialog
-                .Builder(MainActivity.this);
-
-        builder.setMessage("The url is "+ message);
-        builder.setTitle("Result");
-        builder.setCancelable(true);
-        if (message.equals("safe")) {
-            builder.setPositiveButton(
-                            "Proceed",
-                            new DialogInterface
-                                    .OnClickListener() {
-
-                                @Override
-                                public void onClick(DialogInterface dialog,
-                                                    int which)
-                                {
-                                    Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse(url));
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    intent.setPackage("com.android.chrome");
-                                    try {
-                                        startActivity(intent);
-                                    } catch (ActivityNotFoundException ex) {
-                                        // Chrome browser presumably not installed and open Kindle Browser
-                                        intent.setPackage("com.amazon.cloud9");
-                                        startActivity(intent);
-                                    }
-                                }
-                            });
-
-        } else if (message.equals("unSafe")){
-            builder.setPositiveButton(
-                            "Proceed",
-                            new DialogInterface
-                                    .OnClickListener() {
-
-                                @Override
-                                public void onClick(DialogInterface dialog,
-                                                    int which)
-                                {
-                                    Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse(url));
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    intent.setPackage("com.android.chrome");
-                                    try {
-                                        startActivity(intent);
-                                    } catch (ActivityNotFoundException ex) {
-                                        // Chrome browser presumably not installed and open Kindle Browser
-                                        intent.setPackage("com.amazon.cloud9");
-                                        startActivity(intent);
-                                    }
-                                }
-                            });
-
-            builder.setNegativeButton("StaySafe",new DialogInterface
-                    .OnClickListener() {
-
-                @Override
-                public void onClick(DialogInterface dialog,
-                                    int which)
-                {
-                    finish();
-                }
-            });
-        } else {
-            builder.setMessage("OoPs! SOmEthIng wEnT wrOnG!!");
-
-            builder.setNegativeButton("ok",new DialogInterface
-                    .OnClickListener() {
-
-                @Override
-                public void onClick(DialogInterface dialog,
-                                    int which)
-                {
-                    finish();
-                }
-            });
-        }
-
-        AlertDialog alertDialog = builder.create();
-
-        alertDialog.show();
-
-    }
-
-    @Override
     public void showFeedBackAlert() {
         AlertDialog.Builder builder
                 = new AlertDialog
                 .Builder(MainActivity.this);
-
         builder.setMessage("Possibility of Phishing ");
         builder.setTitle("Result");
         builder.setPositiveButton(
@@ -187,5 +101,135 @@ public class MainActivity extends AppCompatActivity implements MainView {
                 });
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+    }
+
+    @Override
+    public void showErrorAlert() {
+        AlertDialog.Builder builder
+                = new AlertDialog
+                .Builder(MainActivity.this);
+        builder.setMessage("OoPs! SOmEthIng wEnT wrOnG!!");
+        builder.setTitle("Error");
+        builder.setPositiveButton(
+                "Ok",
+                new DialogInterface
+                        .OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog,
+                                        int which)
+                    {
+                        return;
+                    }
+                });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    @Override
+    public void showSafeUrlAlert(final String url) {
+        AlertDialog.Builder builder
+                = new AlertDialog
+                .Builder(MainActivity.this);
+        builder.setMessage("Url is Safe");
+        builder.setTitle("Result");
+        builder.setPositiveButton(
+                "Proceed",
+                new DialogInterface
+                        .OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog,
+                                        int which)
+                    {
+                        Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse(url));
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.setPackage("com.android.chrome");
+                        try {
+                            startActivity(intent);
+                        } catch (ActivityNotFoundException ex) {
+                            intent.setPackage("com.amazon.cloud9");
+                            startActivity(intent);
+                        }
+                    }
+                });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    @Override
+    public void showUnsafeUrlAlert(final String url) {
+        AlertDialog.Builder builder
+                = new AlertDialog
+                .Builder(MainActivity.this);
+        builder.setMessage("Url is NOT safe!!!");
+        builder.setTitle("Result");
+        builder.setNegativeButton(
+                "Proceed",
+                new DialogInterface
+                        .OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog,
+                                        int which)
+                    {
+                        Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse(url));
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.setPackage("com.android.chrome");
+                        try {
+                            startActivity(intent);
+                        } catch (ActivityNotFoundException ex) {
+                            intent.setPackage("com.amazon.cloud9");
+                            startActivity(intent);
+                        }
+                    }
+                });
+        builder.setPositiveButton(
+                "StaySafe",
+                new DialogInterface
+                        .OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog,
+                                        int which)
+                    {
+                        finish();
+                    }
+                });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    @Override
+    public void showSucessFeedback() {
+            AlertDialog.Builder builder
+                    = new AlertDialog
+                    .Builder(MainActivity.this);
+            builder.setMessage("Thanks for the feedback");
+            builder.setTitle("success");
+            builder.setPositiveButton(
+                    "Ok",
+                    new DialogInterface
+                            .OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog,
+                                            int which)
+                        {
+                            return;
+                        }
+                    });
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+    }
+    @Override
+    public void hideProgressBar() {
+        ProgressBar progressBar =  findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.GONE);
+    }
+    @Override
+    public void showProgressBar() {
+        ProgressBar progressBar =  findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.VISIBLE);
     }
 }
