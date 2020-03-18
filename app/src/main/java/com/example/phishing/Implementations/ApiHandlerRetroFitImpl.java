@@ -59,7 +59,6 @@ public class ApiHandlerRetroFitImpl implements ApiHandler {
             public void onResponse(Call<String> call, Response<String> response) {
                 delegate.processFeedbackResult(true);
             }
-
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 delegate.processFeedbackResult(false);
