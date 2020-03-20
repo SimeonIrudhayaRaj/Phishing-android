@@ -24,7 +24,7 @@ public class ApiHandlerRetroFitImpl implements ApiHandler {
     }
     @Override
     public String makeVerifyRequest(final String url) {
-        Retrofit retrofit = new Retrofit.Builder()
+        retrofit = new Retrofit.Builder()
                 .baseUrl(this.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
@@ -48,7 +48,7 @@ public class ApiHandlerRetroFitImpl implements ApiHandler {
 
     @Override
     public void makeFeedbackCall(String url, int chance) {
-        Retrofit retrofit = new Retrofit.Builder()
+        retrofit = new Retrofit.Builder()
                 .baseUrl(this.BASE_URL)
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .build();
@@ -57,7 +57,11 @@ public class ApiHandlerRetroFitImpl implements ApiHandler {
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                delegate.processFeedbackResult(true);
+                if (response.isSuccessful()) {
+                    delegate.processFeedbackResult(true);
+                } else {
+                    delegate.processFeedbackResult(false);
+                }
             }
             @Override
             public void onFailure(Call<String> call, Throwable t) {
